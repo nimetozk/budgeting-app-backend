@@ -19,13 +19,13 @@ router.post('/auth/signup',async (req,res) =>{
     user.phoneNumber = req.body.phoneNumber;
 
     if(validator.isEmpty(user.email) || validator.isEmpty(user.password)){
-        res.status(StatusCodes.BAD_REQUEST).json("email ve password boş olamaz ! ");
+        res.status(StatusCodes.BAD_REQUEST).json("You must enter email and password ! ");
 
         return;
     }
 
     if(!validator.isEmail(user.email)){
-       res.status(StatusCodes.BAD_REQUEST).json("email is invalid format !");
+       res.status(StatusCodes.BAD_REQUEST).json("Email is invalid invalid !");
        return;
    }
      
@@ -45,13 +45,13 @@ router.post('/auth/signin',async (req,res) =>{
     const {email, password} = req.body;
 
      if(validator.isEmpty(email) || validator.isEmpty(password)){
-        res.status(StatusCodes.BAD_REQUEST).json("email ve password boş olamaz ! ");
+        res.status(StatusCodes.BAD_REQUEST).json("You must enter email and password ! ");
          return;
      }
 
 
      if(!validator.isEmail(email)){
-        res.status(StatusCodes.BAD_REQUEST).json("email is invalid format !");
+        res.status(StatusCodes.BAD_REQUEST).json("Email is invalid format !");
         return;
     }
       
