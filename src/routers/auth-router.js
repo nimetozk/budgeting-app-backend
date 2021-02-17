@@ -53,13 +53,13 @@ router.post("/auth/signin", async (req, res) => {
   }
 
   if (!validator.isEmail(email)) {
-    res.status(StatusCodes.BAD_REQUEST).json("Email is invalid format !");
+    res.status(StatusCodes.BAD_REQUEST).send("Email is invalid format !");
     return;
   }
 
   const user = await userRepository.getUserByCredential(email, password);
   if (!user) {
-    res.status(StatusCodes.NOT_FOUND);
+    res.status(StatusCodes.NOT_FOUND).send("invalided !");
     return;
   }
 
