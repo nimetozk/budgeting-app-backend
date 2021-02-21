@@ -8,6 +8,7 @@ import bankAccountRouter from "./routers/bank-account-router";
 import categoryRouter from "./routers/category-router";
 import taskRouter from "./routers/task-router";
 import authRouter from "./routers/auth-router";
+import bankRouter from "./routers/bank-router";
 import cors from "cors";
 
 const startServer = async () => {
@@ -23,6 +24,7 @@ const startServer = async () => {
   app.use("/api", categoryRouter);
   app.use("/api", taskRouter);
   app.use("/api", authRouter);
+  app.use("/api", bankRouter);
 
   app.listen(config.port, function () {
     console.log(`Server started listening on ${config.port}`);

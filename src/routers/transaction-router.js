@@ -3,14 +3,15 @@ import { Types } from "mongoose";
 import { uploadTsvHandler } from "../middleware/file-upload-middleware";
 import TransactionModel from "../schemas/transaction-schema";
 import getLoader from "../excel-loaders/bank-loader-factory";
-import TaskModel from "../schemas/task-schema";
 import * as taskRepository from "../repositories/task-repository";
 import * as saveTransactions from "../repositories/transaction-repository";
+import authorize from "../middleware/authorize";
 
 const router = Router();
 
 router.post(
   "/transaction",
+  authorize,
 
   async (req, res, next) => {
     const transaction = new TransactionModel();
@@ -29,10 +30,9 @@ router.post(
 
 router.post(
   "/transaction/upload/:taskId",
+  authorize,
   uploadTsvHandler,
   async (req, res, next) => {
-    // task Id uzerindne banka accountıdısi tespit edilicel. BankAccount üzerindeki bankname alınacak
-
     const bankName = await taskRepository.getBankNameByTaskId(
       Types.ObjectId(req.params.taskId)
     );
