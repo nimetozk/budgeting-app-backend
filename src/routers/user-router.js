@@ -3,7 +3,6 @@ import UserModel from "../schemas/user-schema";
 import * as userRepository from "../repositories/user-repository";
 import authorize from "../middleware/authorize";
 import { StatusCodes } from "http-status-codes";
-import authorize from "../middleware/authorize";
 
 const router = Router();
 
