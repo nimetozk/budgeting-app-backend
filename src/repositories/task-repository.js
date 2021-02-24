@@ -25,3 +25,14 @@ export const taskList = () => {
     .lean(false)
     .exec();
 };
+
+export const getTaskById = (id) => {
+  return TaskModel.findById(id)
+    .populate({
+      path: "refBankAccount",
+      select: "_id sortCode accountNo refBank",
+      populate: { path: "refBank", select: "_id name" },
+    })
+    .lean(false)
+    .exec();
+};
