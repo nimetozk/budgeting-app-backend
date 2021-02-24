@@ -40,4 +40,16 @@ router.delete("/bankaccount/:id", authorize, async (req, res) => {
   res.status(StatusCodes.OK).json(deleteAccount);
 });
 
+router.get(
+  `/bankaccount/getcurrentuserbankaccounts/:bankId`,
+  authorize,
+  async (req, res) => {
+    const userBankAccounts = await bankAccountRepository.getCurrentUserBankAccounts(
+      req.current.id,
+      req.params.bankId
+    );
+    res.status(StatusCodes.OK).json(userBankAccounts);
+  }
+);
+
 export default router;
