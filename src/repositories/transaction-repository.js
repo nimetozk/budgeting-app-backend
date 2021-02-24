@@ -1,12 +1,16 @@
+import TaskModel from "../schemas/task-schema";
+import TransactionModel from "../schemas/transaction-schema";
 
+export const saveAllTransactions = async (transactions) => {
+  const arrayPromises = [];
 
-export const saveAllTransactions = async(transactions) =>{
+  transactions.forEach(async (transaction) => {
+    arrayPromises.push(transaction.save());
+  });
 
-   const arrayPromises = [];
+  await Promise.all(arrayPromises);
+};
 
-   transactions.forEach(async(transaction) => {
-      arrayPromises.push(transaction.save());
-   });
- 
-   await Promise.all(arrayPromises);
- }
+export const getTransactionsByTaskId = (taskId) => {
+  return TransactionModel.find().where("refTask").equals(taskId).exec();
+};

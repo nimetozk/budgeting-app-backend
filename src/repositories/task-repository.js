@@ -5,13 +5,14 @@ export const getBankNameByTaskId = async (taskId) => {
   const task = await TaskModel.findOne({ _id: taskId })
     .select("_id refBankAccount")
     .exec();
+
   const bankAccount = await BankAccountModel.findOne({
     _id: task.refBankAccount,
   })
-    .select("bankName")
+    .populate("refBank", "name")
     .exec();
 
-  return bankAccount.bankName;
+  return bankAccount.refBank.name;
 };
 
 export const taskList = () => {
@@ -26,13 +27,13 @@ export const taskList = () => {
     .exec();
 };
 
-export const getTaskById = (id) => {
+export const getTaskById = (id, lean = false) => {
   return TaskModel.findById(id)
     .populate({
       path: "refBankAccount",
-      select: "_id sortCode accountNo refBank",
+      select: "_id sortCode accountNo refBank uploadDate fileName",
       populate: { path: "refBank", select: "_id name" },
     })
-    .lean(false)
+    .lean(lean)
     .exec();
 };

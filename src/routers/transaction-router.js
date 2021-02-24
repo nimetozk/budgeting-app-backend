@@ -4,8 +4,9 @@ import { uploadTsvHandler } from "../middleware/file-upload-middleware";
 import TransactionModel from "../schemas/transaction-schema";
 import getLoader from "../excel-loaders/bank-loader-factory";
 import * as taskRepository from "../repositories/task-repository";
-import * as saveTransactions from "../repositories/transaction-repository";
+import * as transactionsRepository from "../repositories/transaction-repository";
 import authorize from "../middleware/authorize";
+import TaskModel from "../schemas/task-schema";
 
 const router = Router();
 
@@ -36,11 +37,8 @@ router.post(
     const bankName = await taskRepository.getBankNameByTaskId(
       Types.ObjectId(req.params.taskId)
     );
-    console.log("bankName ", bankName);
     const loader = getLoader(bankName);
     const result = await loader(req.file.buffer, req.params.taskId);
-
-    console.log("result ", result);
 
     if (result.isError) {
       res.status(404).json(result.message);
@@ -49,10 +47,22 @@ router.post(
 
     const transactions = result.value;
 
-    await saveTransactions.saveAllTransactions(transactions);
+    await transactionsRepository.saveAllTransactions(transactions);
+
+    const taskModel = await TaskModel.findById(req.params.taskId).exec();
+    taskModel.uploadDate = new Date();
+    taskModel.fileName = req.file.fileName;
+    taskModel.save();
 
     res.json("ok");
   }
 );
 
+router.get("/transaction/task/:taskId", authorize, async (req, res) => {
+  const transactions = await transactionsRepository.getTransactionsByTaskId(
+    req.params.taskId
+  );
+
+  res.status(200).json(transactions);
+});
 export default router;
