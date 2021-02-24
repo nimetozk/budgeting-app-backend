@@ -13,3 +13,13 @@ export const getDeleteBankAccountById = async (id) => {
     _id: id,
   }).exec();
 };
+
+export const getCurrentUserBankAccounts = (userId, bankId) => {
+  return BankAccountModel.find({
+    refUser: userId,
+    refBank: bankId,
+  })
+    .select("_id sortCode accountNo description")
+    .lean(false)
+    .exec();
+};
