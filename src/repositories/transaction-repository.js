@@ -14,3 +14,9 @@ export const saveAllTransactions = async (transactions) => {
 export const getTransactionsByTaskId = (taskId) => {
   return TransactionModel.find().where("refTask").equals(taskId).exec();
 };
+
+export const partialUpdate = async (refCategory, id) => {
+  const transactionModel = await TransactionModel.findOne({ _id: id }).exec();
+  transactionModel.refCategory = refCategory;
+  transactionModel.save();
+};

@@ -1,4 +1,5 @@
 import BankAccountModel from "../schemas/bank-account-schema";
+import TaskModel from "../schemas/task-schema";
 
 export const getBankAccountsByUser = (userId) => {
   return BankAccountModel.find({ refUser: userId })
@@ -22,4 +23,12 @@ export const getCurrentUserBankAccounts = (userId, bankId) => {
     .select("_id sortCode accountNo description")
     .lean(false)
     .exec();
+};
+
+export const existTasksByRefBankAccount = async (bankAccountId) => {
+  const task = await TaskModel.findOne({ refBankAccount: bankAccountId })
+    .lean(false)
+    .select("_id")
+    .exec();
+  return task ? true : false;
 };

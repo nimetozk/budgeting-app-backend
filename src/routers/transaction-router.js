@@ -65,4 +65,9 @@ router.get("/transaction/task/:taskId", authorize, async (req, res) => {
 
   res.status(200).json(transactions);
 });
+
+router.patch("/transaction/:id", authorize, async (req, res) => {
+  await transactionsRepository.partialUpdate(req.body, req.params.id);
+  res.status(200).json("ok");
+});
 export default router;
