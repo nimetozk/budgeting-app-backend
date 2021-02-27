@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import CategoryModel from "../schemas/category-schema";
 import authorize from "../middleware/authorize";
+import * as categoryRepository from "../repositories/category-repository";
 
 const router = Router();
 
@@ -17,5 +18,10 @@ router.post(
     res.json(newcategory);
   }
 );
+
+router.get("/category/list", authorize, async (req, res) => {
+  const categoryList = await categoryRepository.getCategoryList();
+  res.status(200).json(categoryList);
+});
 
 export default router;

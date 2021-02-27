@@ -33,6 +33,17 @@ router.get("/bankaccount/useraccounts", authorize, async (req, res) => {
 });
 
 router.delete("/bankaccount/:id", authorize, async (req, res) => {
+  const ok = await bankAccountRepository.existTasksByRefBankAccount(
+    req.params.id
+  );
+  if (ok) {
+    res
+      .status(500)
+      .send(
+        "This cannot be deleted because there an record relationship with task !"
+      );
+    return;
+  }
   const deleteAccount = await bankAccountRepository.getDeleteBankAccountById(
     req.params.id
   );
