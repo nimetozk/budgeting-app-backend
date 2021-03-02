@@ -4,7 +4,7 @@ import { categorySchema } from "./category-schema";
 const transactionSchema = new Schema({
   transactionDate: { type: Date },
   transactionType: String,
-  transactionAmount: Number,
+  transactionAmount: { type: Number },
   externalCode: String,
   description: String,
   refTask: { type: mongoose.Types.ObjectId, ref: "task" },
