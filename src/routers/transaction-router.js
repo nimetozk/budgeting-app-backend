@@ -70,4 +70,29 @@ router.patch("/transaction/:id", authorize, async (req, res) => {
   await transactionsRepository.partialUpdate(req.body, req.params.id);
   res.status(200).json("ok");
 });
+
+router.get("/transaction/reportByCategory", authorize, async (req, res) => {
+  const { income, bankId, startDate, endDate } = req.query;
+
+  const data = await transactionsRepository.getCategoryGroupTransactions(
+    income === "true" ? true : false,
+    bankId,
+    startDate,
+    endDate,
+    req.current.id
+  );
+  res.status(200).json(data);
+});
+
+router.get("/transaction/reportByMonth", authorize, async (req, res) => {
+  const { bankId, startDate, endDate } = req.query;
+
+  const data = await transactionsRepository.getMonthGroupTransactions(
+    bankId,
+    startDate,
+    endDate,
+    req.current.id
+  );
+  res.status(200).json(data);
+});
 export default router;
