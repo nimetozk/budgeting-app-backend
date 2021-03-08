@@ -15,16 +15,21 @@ export const getBankNameByTaskId = async (taskId) => {
   return bankAccount.refBank.name;
 };
 
-export const taskList = () => {
-  return TaskModel.find({})
-    .populate({
-      path: "refBankAccount",
-      select: "accountNo sortCode refBank",
-      populate: { path: "refBank", select: "name" },
-    })
-    .select("_id name uploadDate status")
-    .lean(false)
-    .exec();
+export const taskList = (userId) => {
+  console.log("userId.....", userId);
+  return (
+    TaskModel.find({})
+      .populate({
+        path: "refBankAccount",
+        select: "accountNo sortCode refBank refUser",
+        populate: { path: "refBank", select: "name" },
+      })
+      // .where("refBankAccount.refUser")
+      // .equals(userId)
+      .select("_id name uploadDate status")
+      .lean(false)
+      .exec()
+  );
 };
 
 export const getTaskById = (id, lean = false) => {
