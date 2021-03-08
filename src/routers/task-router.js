@@ -22,13 +22,28 @@ router.post(
   }
 );
 
+router.put(
+  "/task/:id",
+  authorize,
+
+  async (req, res, next) => {
+    let task = await TaskModel.findById({ _id: req.params.id }).exec();
+    task.name = req.body.name;
+    task.refBankAccount = Types.ObjectId(req.body.refBankAccount);
+    task = await task.save();
+
+    res.status(StatusCodes.OK).json(task);
+  }
+);
+
 router.get("/task/:id", authorize, async (req, res) => {
   const task = await taskRepository.getTaskById(req.params.id);
   res.status(StatusCodes.OK).json(task);
 });
 
 router.get("/task", authorize, async (req, res) => {
-  const list = await taskRepository.taskList();
+  console.log("id ", req.current.id);
+  const list = await taskRepository.taskList(req.current.id);
   res.status(StatusCodes.OK).json(list);
 });
 

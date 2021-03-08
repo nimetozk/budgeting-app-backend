@@ -52,7 +52,8 @@ router.post(
     const taskModel = await TaskModel.findById(req.params.taskId).exec();
     taskModel.uploadDate = new Date();
     taskModel.fileName = req.file.fileName;
-    taskModel.save();
+    taskModel.status = "COMPLETED";
+    await taskModel.save();
 
     res.json("ok");
   }
@@ -85,12 +86,10 @@ router.get("/transaction/reportByCategory", authorize, async (req, res) => {
 });
 
 router.get("/transaction/reportByMonth", authorize, async (req, res) => {
-  const { bankId, startDate, endDate } = req.query;
+  const { year } = req.query;
 
   const data = await transactionsRepository.getMonthGroupTransactions(
-    bankId,
-    startDate,
-    endDate,
+    year,
     req.current.id
   );
   res.status(200).json(data);

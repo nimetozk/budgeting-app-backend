@@ -87,22 +87,21 @@ export const getCategoryGroupTransactions = (
       $group: {
         _id: "$refCategory.name",
         totalAmount: { $sum: "$transactionAmount" },
+        count: { $sum: 1 },
       },
     },
     {
-      $project: { category: "$_id", totalAmount: 1 },
+      $project: { category: "$_id", totalAmount: 1, count: 1 },
     }
   );
 
   return TransactionModel.aggregate(query).exec();
 };
 
-export const getMonthGroupTransactions = (
-  bankId,
-  startDate,
-  endDate,
-  userId
-) => {
+export const getMonthGroupTransactions = (year, userId) => {
+  const startDate = new Date(`${year}-01-01`);
+  const endDate = new Date(`${year}-12-31`);
+
   const query = [];
 
   query.push(
@@ -132,12 +131,6 @@ export const getMonthGroupTransactions = (
     }
   );
 
-  if (bankId) {
-    query.push({
-      $match: { "bankAccount.refBank": Types.ObjectId(bankId) },
-    });
-  }
-
   if (startDate) {
     query.push({
       $match: { transactionDate: { $gte: startDate } },
@@ -156,6 +149,7 @@ export const getMonthGroupTransactions = (
         _id: {
           type: "$transactionType",
           month: { $dateToString: { format: "%m", date: "$transactionDate" } },
+          year: { $dateToString: { format: "%Y", date: "$transactionDate" } },
         },
         totalAmount: { $sum: "$transactionAmount" },
         count: { $sum: 1 },
@@ -167,7 +161,7 @@ export const getMonthGroupTransactions = (
 
     {
       $group: {
-        _id: { month: "$group.month" },
+        _id: { month: "$group.month", year: "$group.year" },
         income: {
           $sum: {
             $cond: {
@@ -192,6 +186,7 @@ export const getMonthGroupTransactions = (
     {
       $project: {
         _id: 1,
+        orderField: { $concat: ["$_id.year", "$_id.month"] },
         income: 1,
         expense: 1,
         month: {
@@ -252,6 +247,8 @@ export const getMonthGroupTransactions = (
       },
     }
   );
+
+  query.push({ $sort: { orderField: 1 } });
 
   return TransactionModel.aggregate(query).exec();
 };
