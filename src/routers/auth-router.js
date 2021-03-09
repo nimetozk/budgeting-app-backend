@@ -5,6 +5,7 @@ import * as userRepository from "../repositories/user-repository";
 import validator from "validator";
 import { StatusCodes } from "http-status-codes";
 import UserModel from "../schemas/user-schema";
+import { checkPassword, hashPassword } from "../util";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post("/auth/signup", async (req, res) => {
   user.firstname = req.body.firstname;
   user.lastname = req.body.lastname;
   user.email = req.body.email;
-  user.password = req.body.password;
+  user.password = await hashPassword(req.body.password);
   user.phoneNumber = req.body.phoneNumber;
 
   if (validator.isEmpty(user.email) || validator.isEmpty(user.password)) {
@@ -57,9 +58,15 @@ router.post("/auth/signin", async (req, res) => {
     return;
   }
 
-  const user = await userRepository.getUserByCredential(email, password);
+  const user = await userRepository.getUserByCredential(email);
   if (!user) {
     res.status(StatusCodes.NOT_FOUND).send("invalided !");
+    return;
+  }
+
+  const ok = await checkPassword(user.password, password);
+  if (!ok) {
+    res.status(StatusCodes.NOT_FOUND).send("password invalid !");
     return;
   }
 

@@ -1,48 +1,51 @@
- import * as categoryRepository from "../repositories/category-repository";
+import * as categoryRepository from "../repositories/category-repository";
+import argon2 from "argon2";
+import bcrypt from "bcrypt";
 
 export class Result {
   isError = false;
   value = null;
-  message =  "";
+  message = "";
 }
 
+export const IsnullOrEmpty = (value) => {
+  if (typeof value !== "string") {
+    return !Boolean(value);
+  }
 
-export const IsnullOrEmpty = (value) =>{
+  if (!value || !value.trim().length) return true;
 
-     if(typeof value !== "string") {
-         return !Boolean(value);
-     }
-      
-     if(!value || !((value.trim()).length))
-       return true;     
-       
-     return false;
+  return false;
+};
 
-}
+export const assignCategories = async (desc = "") => {
+  if (IsnullOrEmpty(desc)) {
+    return await categoryRepository.getGeneralCategory();
+  }
 
-export const assignCategories = async(desc="") => {
+  let newArray = desc.split(" ");
+  let category = null;
+  newArray.filter((word) => word.length > 3);
 
-      if(IsnullOrEmpty(desc)) {
-          return await categoryRepository.getGeneralCategory();;
-      }
+  for (const word of newArray) {
+    category = await categoryRepository.getWordCategoryId(word.toLowerCase());
+    if (category) break;
+  }
 
-     let newArray = desc.split(" ");  
-     let category = null;
-     newArray
-      .filter((word)=> word.length > 3);
+  if (!category) category = await categoryRepository.getGeneralCategory();
 
+  return category;
+};
 
-    for (const word of newArray) {
-      category = await categoryRepository.getWordCategoryId(word.toLowerCase());
-        if(category) 
-            break;
-    }
+export const hashPassword = async (plainPassword) => {
+  return argon2.hash(plainPassword, { type: argon2.argon2id });
+};
 
-    if(!category)
-      category = await categoryRepository.getGeneralCategory();
+export const checkPassword = async (hash, plainPassword) => {
+  if (hash.indexOf("$argon2") === 0) {
+    return argon2.verify(hash, plainPassword);
+  }
 
-      return category;
-
-}
-
-
+  const finalHash = hash.replace("$2y$", "$2b$");
+  return bcrypt.compare(plainPassword, finalHash);
+};
