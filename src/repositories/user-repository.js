@@ -6,10 +6,8 @@ export const InsertUser = async (user) => {
   return newUser;
 };
 
-export const getUserByCredential = (email, password) => {
-  return UserModel.findOne({ email: email, password: password })
-    .lean(false)
-    .exec();
+export const getUserByCredential = (email) => {
+  return UserModel.findOne({ email: email }).lean(false).exec();
 };
 
 export const getUserByEmail = (email) => {
@@ -26,4 +24,18 @@ export const updateUser = async (user) => {
 
   await userIndb.save();
   return userIndb;
+};
+
+export const getUserList = async () => {
+  return UserModel.find({}).lean(false).exec();
+};
+
+export const getUserById = (id) => {
+  return UserModel.findById({ _id: id }).lean(false).exec();
+};
+
+export const getDeleteUserById = async (id) => {
+  const user = await UserModel.findByIdAndDelete({
+    _id: id,
+  }).exec();
 };
