@@ -10,9 +10,11 @@ import taskRouter from "./routers/task-router";
 import authRouter from "./routers/auth-router";
 import bankRouter from "./routers/bank-router";
 import cors from "cors";
+import migrationLoader from "./migration/migrationLoader";
 
 const startServer = async () => {
   await DbLoader();
+  await migrationLoader();
 
   const app = express();
   app.use(cors());
