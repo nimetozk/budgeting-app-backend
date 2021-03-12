@@ -72,13 +72,13 @@ export const getCategoryGroupTransactions = (
 
   if (startDate) {
     query.push({
-      $match: { transactionDate: { $gte: startDate } },
+      $match: { transactionDate: { $gte: new Date(startDate) } },
     });
   }
 
   if (endDate) {
     query.push({
-      $match: { transactionDate: { $lte: endDate } },
+      $match: { transactionDate: { $lte: new Date(endDate) } },
     });
   }
 
