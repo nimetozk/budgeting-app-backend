@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import * as userRepository from "../repositories/user-repository";
 import validator from "validator";
 import { StatusCodes } from "http-status-codes";
-import UserModel from "../schemas/user-schema";
+import UserModel, { Roles } from "../schemas/user-schema";
 import { checkPassword, hashPassword } from "../util";
 
 const router = Router();
@@ -16,6 +16,7 @@ router.post("/auth/signup", async (req, res) => {
   user.email = req.body.email;
   user.password = await hashPassword(req.body.password);
   user.phoneNumber = req.body.phoneNumber;
+  user.userRoles = [Roles.OPERATOR];
 
   if (validator.isEmpty(user.email) || validator.isEmpty(user.password)) {
     res
