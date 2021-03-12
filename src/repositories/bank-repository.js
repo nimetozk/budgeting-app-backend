@@ -13,3 +13,11 @@ export const bankList = () => {
 export const getBankById = (id) => {
   return BankModel.findById(id).lean(false).exec();
 };
+
+export const updateBank = async (bank) => {
+  const bankInDb = await BankModel.findById(bank._id).exec();
+  bankInDb.name = bank.name;
+
+  await bankInDb.save();
+  return bankInDb;
+};

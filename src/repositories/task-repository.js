@@ -1,5 +1,6 @@
 import BankAccountModel from "../schemas/bank-account-schema";
 import TaskModel from "../schemas/task-schema";
+import mongoose from "mongoose";
 
 export const getBankNameByTaskId = async (taskId) => {
   const task = await TaskModel.findOne({ _id: taskId })
@@ -16,20 +17,47 @@ export const getBankNameByTaskId = async (taskId) => {
 };
 
 export const taskList = (userId) => {
-  console.log("userId.....", userId);
-  return (
-    TaskModel.find({})
-      .populate({
-        path: "refBankAccount",
-        select: "accountNo sortCode refBank refUser",
-        populate: { path: "refBank", select: "name" },
-      })
-      // .where("refBankAccount.refUser")
-      // .equals(userId)
-      .select("_id name uploadDate status")
-      .lean(false)
-      .exec()
-  );
+  const query = [];
+
+  query.push([
+    {
+      $lookup: {
+        from: "bankAccount",
+        localField: "refBankAccount",
+        foreignField: "_id",
+        as: "bankAccount",
+      },
+    },
+    { $unwind: { path: "$bankAccount", preserveNullAndEmptyArrays: false } },
+
+    {
+      $lookup: {
+        from: "bank",
+        localField: "bankAccount.refBank",
+        foreignField: "_id",
+        as: "bank",
+      },
+    },
+    { $unwind: { path: "$bank", preserveNullAndEmptyArrays: false } },
+
+    {
+      $match: { "bankAccount.refUser": mongoose.Types.ObjectId(userId) },
+    },
+
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        uploadDate: 1,
+        status: 1,
+        "bankAccount.sortCode": 1,
+        "bankAccount.accountNo": 1,
+        "bank.name": 1,
+      },
+    },
+  ]);
+
+  return TaskModel.aggregate(query).exec();
 };
 
 export const getTaskById = (id, lean = false) => {

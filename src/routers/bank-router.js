@@ -35,4 +35,10 @@ router.get("/bank/:id", authorize, async (req, res, next) => {
   res.status(StatusCodes.OK).json(bank);
 });
 
+router.put("/bank", authorize, async (req, res) => {
+  const bank = await bankRepository.updateBank(req.body);
+
+  res.status(StatusCodes.OK).json(bank);
+});
+
 export default router;

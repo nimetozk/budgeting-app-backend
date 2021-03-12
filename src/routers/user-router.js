@@ -4,6 +4,7 @@ import * as userRepository from "../repositories/user-repository";
 import authorize from "../middleware/authorize";
 import { StatusCodes } from "http-status-codes";
 import { hashPassword } from "../util";
+import * as bankAccountRepository from "../repositories/bank-account-repository";
 
 const router = Router();
 
@@ -59,6 +60,17 @@ router.get("/user/:id", authorize, async (req, res, next) => {
 });
 
 router.delete("/user/:id", authorize, async (req, res) => {
+  const hasAccount = await bankAccountRepository.hasUserBankAccounts(
+    req.params.id
+  );
+  if (hasAccount) {
+    res
+      .status(StatusCodes.METHOD_NOT_ALLOWED)
+      .send(
+        "This user cannot be deleted, user has relationship with user bank account"
+      );
+    return;
+  }
   const deleteUser = await userRepository.getDeleteUserById(req.params.id);
 
   res.status(StatusCodes.OK).json(deleteUser);
