@@ -9,6 +9,10 @@ export const getBankAccountsByUser = (userId) => {
     .exec();
 };
 
+export const hasUserBankAccounts = (userId) => {
+  return BankAccountModel.exists({ refUser: userId });
+};
+
 export const getDeleteBankAccountById = async (id) => {
   const bankAccount = await BankAccountModel.findByIdAndDelete({
     _id: id,
