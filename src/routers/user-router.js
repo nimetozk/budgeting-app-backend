@@ -3,7 +3,7 @@ import UserModel, { Roles } from "../schemas/user-schema";
 import * as userRepository from "../repositories/user-repository";
 import authorize from "../middleware/authorize";
 import { StatusCodes } from "http-status-codes";
-import { hashPassword } from "../util";
+import { hashPassword, wrapFunction } from "../util";
 import * as bankAccountRepository from "../repositories/bank-account-repository";
 
 const router = Router();
@@ -31,18 +31,25 @@ router.get("/user/current", authorize, async (req, res) => {
   res.status(StatusCodes.OK).json(user);
 });
 
-router.put("/user", authorize, async (req, res, next) => {
+const updatedUser = async (req, res) => {
   const user = { ...req.body };
 
   const userInDB = UserModel.findById(user._id).exec();
   if (userInDB.password != user.password) {
     user.password = await hashPassword(user.password);
   }
+  if (userInDB) {
+    res
+      .status(StatusCodes.NOT_ACCEPTABLE)
+      .json("This email address already exists!");
+    return;
+  }
 
   const updatedUser = await userRepository.updateUser(user);
+  res.status(200).json(updatedUser);
+};
 
-  res.json(updatedUser);
-});
+router.put("/user", authorize, wrapFunction(updatedUser));
 
 router.get("/user/list", authorize, async (req, res, next) => {
   const userList = await userRepository.getUserList();
