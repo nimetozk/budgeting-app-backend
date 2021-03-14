@@ -49,3 +49,27 @@ export const checkPassword = async (hash, plainPassword) => {
   const finalHash = hash.replace("$2y$", "$2b$");
   return bcrypt.compare(plainPassword, finalHash);
 };
+
+export const errorToString = (error) => {
+  let message = "";
+
+  if (error.response && error.response.data) {
+    message = error.response.data;
+    return message;
+  }
+
+  if (error instanceof Error && error.message) {
+    message += error.message;
+  }
+
+  if (error instanceof Error && error.stack) {
+    message += ` | stack: ${error.stack}`;
+  }
+
+  if (message === "") return error;
+  return message;
+};
+
+export const wrapFunction = (fn) => (req, res, next) => {
+  return fn(req, res, next).catch(next);
+};

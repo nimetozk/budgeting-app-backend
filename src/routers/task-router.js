@@ -42,7 +42,6 @@ router.get("/task/:id", authorize, async (req, res) => {
 });
 
 router.get("/task", authorize, async (req, res) => {
-  console.log("id ", req.current.id);
   const list = await taskRepository.taskList(req.current.id);
   res.status(StatusCodes.OK).json(list);
 });

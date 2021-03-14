@@ -11,6 +11,7 @@ import authRouter from "./routers/auth-router";
 import bankRouter from "./routers/bank-router";
 import cors from "cors";
 import migrationLoader from "./migration/migrationLoader";
+import { errorToString } from "./util";
 
 const startServer = async () => {
   await DbLoader();
@@ -27,6 +28,10 @@ const startServer = async () => {
   app.use("/api", taskRouter);
   app.use("/api", authRouter);
   app.use("/api", bankRouter);
+  app.use((err, req, res, next) => {
+    //  console.log(err);
+    res.status(500).send("error :" + errorToString(err));
+  });
 
   app.listen(config.port, function () {
     console.log(`Server started listening on ${config.port}`);
