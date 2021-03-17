@@ -3,9 +3,7 @@ import argon2 from "argon2";
 import bcrypt from "bcrypt";
 
 export class Result {
-  isError = false;
-  value = null;
-  message = "";
+  constructor(isError = false, value = null, message = "") {}
 }
 
 export const IsnullOrEmpty = (value) => {
@@ -13,9 +11,7 @@ export const IsnullOrEmpty = (value) => {
     return !Boolean(value);
   }
 
-  if (!value || !value.trim().length) return true;
-
-  return false;
+  return !value || !value.trim().length;
 };
 
 export const assignCategories = async (desc = "") => {
@@ -37,11 +33,11 @@ export const assignCategories = async (desc = "") => {
   return category;
 };
 
-export const hashPassword = async (plainPassword) => {
+export const hashPassword = (plainPassword) => {
   return argon2.hash(plainPassword, { type: argon2.argon2id });
 };
 
-export const checkPassword = async (hash, plainPassword) => {
+export const checkPassword = (hash, plainPassword) => {
   if (hash.indexOf("$argon2") === 0) {
     return argon2.verify(hash, plainPassword);
   }
