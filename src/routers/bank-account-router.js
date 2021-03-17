@@ -3,36 +3,40 @@ import BankAccountModel from "../schemas/bank-account-schema";
 import * as bankAccountRepository from "../repositories/bank-account-repository";
 import { StatusCodes } from "http-status-codes";
 import authorize from "../middleware/authorize";
+import { wrapFunction } from "../util";
 
 const router = Router();
 
-router.post(
-  "/bankaccount",
-  authorize,
+const postBankAccount = async (req, res, next) => {
+  const bankAccount = new BankAccountModel();
+  bankAccount.accountNo = req.body.accountNo;
+  bankAccount.sortCode = req.body.sortCode;
+  bankAccount.description = req.body.description;
+  bankAccount.currency = req.body.currency;
+  bankAccount.country = req.body.country;
+  bankAccount.refBank = req.body.refBank;
+  bankAccount.refUser = req.current.id;
+  const newBankAccount = await bankAccount.save();
 
-  async (req, res, next) => {
-    const bankAccount = new BankAccountModel();
-    bankAccount.accountNo = req.body.accountNo;
-    bankAccount.sortCode = req.body.sortCode;
-    bankAccount.description = req.body.description;
-    bankAccount.currency = req.body.currency;
-    bankAccount.country = req.body.country;
-    bankAccount.refBank = req.body.refBank;
-    bankAccount.refUser = req.current.id;
-    const newBankAccount = await bankAccount.save();
+  res.json(newBankAccount);
+};
 
-    res.json(newBankAccount);
-  }
-);
+router.post("/bankaccount", authorize, wrapFunction(postBankAccount));
 
-router.get("/bankaccount/useraccounts", authorize, async (req, res) => {
+const bankAccountByUser = async (req, res) => {
   const userBankAccounts = await bankAccountRepository.getBankAccountsByUser(
     req.current.id
   );
   res.status(StatusCodes.OK).json(userBankAccounts);
-});
+};
 
-router.delete("/bankaccount/:id", authorize, async (req, res) => {
+router.get(
+  "/bankaccount/useraccounts",
+  authorize,
+  wrapFunction(bankAccountByUser)
+);
+
+const deleteBankAccount = async (req, res) => {
   const ok = await bankAccountRepository.existTasksByRefBankAccount(
     req.params.id
   );
@@ -49,18 +53,21 @@ router.delete("/bankaccount/:id", authorize, async (req, res) => {
   );
 
   res.status(StatusCodes.OK).json(deleteAccount);
-});
+};
 
+router.delete("/bankaccount/:id", authorize, deleteBankAccount);
+
+const currentUserBankAccounts = async (req, res) => {
+  const userBankAccounts = await bankAccountRepository.getCurrentUserBankAccounts(
+    req.current.id,
+    req.params.bankId
+  );
+  res.status(StatusCodes.OK).json(userBankAccounts);
+};
 router.get(
   `/bankaccount/getcurrentuserbankaccounts/:bankId`,
   authorize,
-  async (req, res) => {
-    const userBankAccounts = await bankAccountRepository.getCurrentUserBankAccounts(
-      req.current.id,
-      req.params.bankId
-    );
-    res.status(StatusCodes.OK).json(userBankAccounts);
-  }
+  wrapFunction(currentUserBankAccounts)
 );
 
 export default router;

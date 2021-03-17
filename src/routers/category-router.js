@@ -2,26 +2,26 @@ import express, { Router } from "express";
 import CategoryModel from "../schemas/category-schema";
 import authorize from "../middleware/authorize";
 import * as categoryRepository from "../repositories/category-repository";
+import { wrapFunction } from "../util";
 
 const router = Router();
 
-router.post(
-  "/category",
-  authorize,
+const postCategory = async (req, res, next) => {
+  const category = new CategoryModel();
+  category.interClassCode = req.body.interClassCode;
+  category.categoryDesc = req.body.categoryDesc;
+  const newcategory = await category.save();
 
-  async (req, res, next) => {
-    const category = new CategoryModel();
-    category.interClassCode = req.body.interClassCode;
-    category.categoryDesc = req.body.categoryDesc;
-    const newcategory = await category.save();
+  res.json(newcategory);
+};
 
-    res.json(newcategory);
-  }
-);
+router.post("/category", authorize, wrapFunction(postCategory));
 
-router.get("/category/list", authorize, async (req, res) => {
+const categoryList = async (req, res) => {
   const categoryList = await categoryRepository.getCategoryList();
   res.status(200).json(categoryList);
-});
+};
+
+router.get("/category/list", authorize, wrapFunction(categoryList));
 
 export default router;

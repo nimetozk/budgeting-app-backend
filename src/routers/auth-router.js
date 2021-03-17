@@ -5,11 +5,11 @@ import * as userRepository from "../repositories/user-repository";
 import validator from "validator";
 import { StatusCodes } from "http-status-codes";
 import UserModel, { Roles } from "../schemas/user-schema";
-import { checkPassword, hashPassword } from "../util";
+import { checkPassword, hashPassword, wrapFunction } from "../util";
 
 const router = Router();
 
-router.post("/auth/signup", async (req, res) => {
+const signup = async (req, res) => {
   let user = new UserModel();
   user.firstname = req.body.firstname;
   user.lastname = req.body.lastname;
@@ -42,9 +42,11 @@ router.post("/auth/signup", async (req, res) => {
   user = await userRepository.InsertUser(user);
   const token = jwt.sign({ email: user.email, id: user._id }, config.jwtKey);
   res.status(StatusCodes.OK).json({ token });
-});
+};
 
-router.post("/auth/signin", async (req, res) => {
+router.post("/auth/signup", wrapFunction(signup));
+
+const signin = async (req, res) => {
   const { email, password } = req.body;
 
   if (validator.isEmpty(email) || validator.isEmpty(password)) {
@@ -61,7 +63,7 @@ router.post("/auth/signin", async (req, res) => {
 
   const user = await userRepository.getUserByCredential(email);
   if (!user) {
-    res.status(StatusCodes.NOT_FOUND).send("invalided !");
+    res.status(StatusCodes.NOT_FOUND).send("invalid !");
     return;
   }
 
@@ -73,6 +75,8 @@ router.post("/auth/signin", async (req, res) => {
 
   const token = jwt.sign({ email: user.email, id: user._id }, config.jwtKey);
   res.status(200).json({ token });
-});
+};
+
+router.post("/auth/signin", wrapFunction(signin));
 
 export default router;
