@@ -1,10 +1,26 @@
 {
   "name": "backend-service",
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": -10
+      }
+    },
+    "setupFilesAfterEnv": [
+      "./setUpTest.js"
+    ]
+  },
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start": "nodemon --exec babel-node src/index.js"
   },
@@ -15,9 +31,13 @@
     "@babel/core": "^7.12.10",
     "@babel/node": "^7.12.10",
     "@babel/plugin-proposal-class-properties": "^7.12.13",
+    "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.12.11",
+    "jest": "^26.6.3",
+    "mongodb-memory-server": "^6.9.6",
     "nodemon": "^2.0.7",
     "prettier": "2.2.1",
+    "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2"
   },
   "dependencies": {

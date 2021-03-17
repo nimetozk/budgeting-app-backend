@@ -2,7 +2,7 @@ import { assignCategories, Result, IsnullOrEmpty } from "../util";
 import TransactionModel from "../schemas/transaction-schema";
 import { Types } from "mongoose";
 
-const validateDate = (date) => {
+export const validateDate = (date) => {
   if (IsnullOrEmpty(date)) {
     return null;
   }
@@ -46,10 +46,7 @@ const loader = async (buffer, taskId) => {
     trans.push(transaction);
   }
 
-  let res = new Result();
-  res.isError = false;
-  res.value = trans;
-  return res;
+  return new Result(false, trans);
 };
 
 export default loader;
