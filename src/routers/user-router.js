@@ -34,8 +34,11 @@ router.get("/user/current", authorize, wrapFunction(userByEmail));
 const updatedUser = async (req, res) => {
   const user = { ...req.body };
 
-  const userInDB = UserModel.findById(user._id).exec();
-  if (userInDB.password != user.password) {
+  const userInDB = await UserModel.findById(user._id).exec();
+
+  console.log("frontend", user);
+  console.log("backEnd", userInDB);
+  if (userInDB.password !== user.password) {
     user.password = await hashPassword(user.password);
   }
 

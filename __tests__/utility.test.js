@@ -4,31 +4,31 @@ import { validateDate } from "../src/excel-loaders/hsbc-bank-loader";
 
 describe("util.js test edilirken", () => {
   describe("IsnullOrEmpty ", () => {
-    test("string bosluk verildiginde ", () => {
+    test("When string is empty ", () => {
       const obje = "";
       expect(IsnullOrEmpty(obje)).toBe(true);
     });
 
-    test("null  verildiginde ", () => {
+    test("When string is null ", () => {
       const obje = null;
       expect(IsnullOrEmpty(obje)).toBe(true);
     });
 
-    test("dolu  verildiginde ", () => {
-      const obje = "dolue";
+    test("When string is not empty", () => {
+      const obje = "test";
       expect(IsnullOrEmpty(obje)).toBe(false);
     });
   });
 });
 
-test("validate test ", () => {
+test("Date validation test ", () => {
   const date = "12/01/2020";
   const expectedDate = new Date("2020-01-12");
 
   expect(validateDate(date)).toEqual(expectedDate);
 });
 
-test("errorToString should be returned string message", () => {
+test("errorToString should return a message", () => {
   try {
     const value = 1 / 0;
   } catch (error) {
