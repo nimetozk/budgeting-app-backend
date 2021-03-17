@@ -22,7 +22,7 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./setUpTest.js",
+    "build": "rimraf dist/ && babel ./src --out-dir ./dist --source-maps --copy-files",
     "start": "nodemon --exec babel-node src/index.js"
   },
   "keywords": [],
