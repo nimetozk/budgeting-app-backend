@@ -8,6 +8,8 @@ import * as transactionsRepository from "../repositories/transaction-repository"
 import authorize from "../middleware/authorize";
 import TaskModel from "../schemas/task-schema";
 import { wrapFunction } from "../util";
+import { placeLabelSchema } from "../schemas/place-label-schema";
+import { StatusCodes } from "http-status-codes";
 
 const router = Router();
 
@@ -38,7 +40,7 @@ const saveTransactions = async (req, res, next) => {
     res.status(404).json(result.message);
     return;
   }
-
+  console.log(result.value);
   const transactions = result.value;
 
   await transactionsRepository.saveAllTransactions(transactions);
@@ -110,5 +112,82 @@ const monthGroupTransactions = async (req, res) => {
 };
 
 router.get("/transaction/reportByMonth", authorize, monthGroupTransactions);
+
+const transactionBykId = async (req, res) => {
+  const transaction = await transactionsRepository.getTransactionById(
+    req.params.transactionId
+  );
+
+  res.status(200).json(transaction);
+};
+
+router.get(
+  "/transaction/:transactionId",
+  authorize,
+  wrapFunction(transactionBykId)
+);
+
+const getPlaceLabels = async (req, res) => {
+  const placeLabels = await transactionsRepository.getPlaceLabels(
+    req.current.id
+  );
+  res.status(200).json(placeLabels);
+};
+
+router.get("/placeLabel", authorize, wrapFunction(getPlaceLabels));
+
+const savePlaceLabel = async (req, res) => {
+  const placeLabelinDB = await transactionsRepository.getPlaceLabelIdByName(
+    req.current.id,
+    req.body.name
+  );
+
+  if (placeLabelinDB) {
+    placeLabelinDB.name = req.body.name;
+    placeLabelinDB.location = req.body.location;
+    await placeLabelinDB.save();
+    res.status(StatusCodes.OK).json(placeLabelinDB._id);
+    return;
+  }
+
+  const placeLabel = {
+    name: req.body.name,
+    refUser: req.current.id,
+    location: req.body.location,
+  };
+
+  const newLabel = await transactionsRepository.savePlaceLabel(placeLabel);
+  res.status(StatusCodes.OK).json(newLabel._id);
+};
+
+router.post("/placeLabel", authorize, wrapFunction(savePlaceLabel));
+
+const getDeletePlaceLabel = async (req, res) => {
+  const deletePlaceLabel = await transactionsRepository.deletePlaceLabel(
+    req.params.placeLabel
+  );
+
+  res.status(StatusCodes.OK).json(deletePlaceLabel);
+};
+
+router.delete(
+  "/placeLabel/:placeLabel",
+  authorize,
+  wrapFunction(getDeletePlaceLabel)
+);
+
+const deleteLocationForTransaction = async (req, res) => {
+  const deletedTransaction = await transactionsRepository.deleteLocationForTransaction(
+    req.params.transactionId
+  );
+
+  res.status(StatusCodes.OK).json(deletedTransaction);
+};
+
+router.delete(
+  "/transaction/:transactionId",
+  authorize,
+  wrapFunction(deleteLocationForTransaction)
+);
 
 export default router;

@@ -21,6 +21,8 @@ const loader = async (buffer, taskId) => {
     return res;
   }
 
+  console.log("alllines", allLines);
+
   const trans = [];
   for (let i = 1; i < allLines.length; i += 1) {
     const lineCells = allLines[i].split(/(?:\t)/g);
@@ -46,6 +48,7 @@ const loader = async (buffer, taskId) => {
     trans.push(transaction);
   }
 
+  //console.log("trans ", trans);
   return new Result(false, trans);
 };
 

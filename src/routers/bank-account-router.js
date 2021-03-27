@@ -70,4 +70,18 @@ router.get(
   wrapFunction(currentUserBankAccounts)
 );
 
+const getBankAccountCurrency = async (req, res) => {
+  const bankAccountCurrency = await bankAccountRepository.getUserBankAccountCurrency(
+    req.params.bankAccount
+  );
+
+  res.status(StatusCodes.OK).json(bankAccountCurrency);
+};
+
+router.get(
+  `/bankaccount/currency/:bankAccount`,
+  authorize,
+  wrapFunction(getBankAccountCurrency)
+);
+
 export default router;

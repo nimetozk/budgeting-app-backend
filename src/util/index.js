@@ -3,7 +3,14 @@ import argon2 from "argon2";
 import bcrypt from "bcrypt";
 
 export class Result {
-  constructor(isError = false, value = null, message = "") {}
+  //isError = false;
+  //value = null;
+  //message = "";
+  constructor(isError = false, value = null, message = "") {
+    this.isError = isError;
+    this.value = value;
+    this.message = message;
+  }
 }
 
 export const IsnullOrEmpty = (value) => {

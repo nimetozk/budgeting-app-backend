@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import TaskModel from "../schemas/task-schema";
 import TransactionModel from "../schemas/transaction-schema";
+import PlaceLabelModel from "../schemas/place-label-schema";
 
 export const saveAllTransactions = async (transactions) => {
   const arrayPromises = [];
@@ -16,9 +17,16 @@ export const getTransactionsByTaskId = (taskId) => {
   return TransactionModel.find().where("refTask").equals(taskId).exec();
 };
 
-export const partialUpdate = async (refCategory, id) => {
+export const partialUpdate = async (transaction, id) => {
   const transactionModel = await TransactionModel.findOne({ _id: id }).exec();
-  transactionModel.refCategory = refCategory;
+  transactionModel.transactionDate = transaction.transactionDate;
+  transactionModel.transactionType = transaction.transactionType;
+  transactionModel.transactionAmount = transaction.transactionAmount;
+  transactionModel.externalCode = transaction.externalCode;
+  transactionModel.description = transaction.description;
+  transactionModel.refTask = transaction.refTask;
+  transactionModel.refCategory = transaction.refCategory;
+  transactionModel.refPlaceLabel = transaction.refPlaceLabel;
   transactionModel.save();
 };
 
@@ -251,4 +259,33 @@ export const getMonthGroupTransactions = (year, userId) => {
   query.push({ $sort: { orderField: 1 } });
 
   return TransactionModel.aggregate(query).exec();
+};
+
+export const getTransactionById = (transactionId) => {
+  return TransactionModel.findById(transactionId).exec();
+};
+
+export const getPlaceLabels = (userId) => {
+  return PlaceLabelModel.find({ refUser: userId }).exec();
+};
+
+export const getPlaceLabelIdByName = (userId, name) => {
+  return PlaceLabelModel.findOne({ name: name, refUser: userId }).exec();
+};
+
+export const savePlaceLabel = (placeLabel) => {
+  const newPlaceLabel = new PlaceLabelModel(placeLabel);
+  return newPlaceLabel.save();
+};
+
+export const deletePlaceLabel = (placeLabelName) => {
+  return PlaceLabelModel.findOneAndDelete({ name: placeLabelName }).exec();
+};
+
+export const deleteLocationForTransaction = async (transactionId) => {
+  const transactionModel = await TransactionModel.findOne({
+    _id: transactionId,
+  }).exec();
+  transactionModel.refPlaceLabel = null;
+  transactionModel.save();
 };

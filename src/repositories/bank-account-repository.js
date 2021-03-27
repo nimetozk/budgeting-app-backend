@@ -1,3 +1,4 @@
+import { async } from "regenerator-runtime";
 import BankAccountModel from "../schemas/bank-account-schema";
 import TaskModel from "../schemas/task-schema";
 
@@ -35,4 +36,13 @@ export const existTasksByRefBankAccount = async (bankAccountId) => {
     .select("_id")
     .exec();
   return task ? true : false;
+};
+
+export const getUserBankAccountCurrency = async (bankAccount) => {
+  const currency = await BankAccountModel.findById({ _id: bankAccount })
+    .select("currency")
+    .lean(true)
+    .exec();
+
+  return currency;
 };
