@@ -10,6 +10,7 @@ import TaskModel from "../schemas/task-schema";
 import { wrapFunction } from "../util";
 import { placeLabelSchema } from "../schemas/place-label-schema";
 import { StatusCodes } from "http-status-codes";
+import { async } from "regenerator-runtime";
 
 const router = Router();
 
@@ -188,6 +189,20 @@ router.delete(
   "/transaction/:transactionId",
   authorize,
   wrapFunction(deleteLocationForTransaction)
+);
+
+const getLocationTotalAmount = async (req, res) => {
+  const locationTotalAmount = await transactionsRepository.locationTotalAmount(
+    req.current.id
+  );
+
+  res.status(StatusCodes.OK).json(locationTotalAmount);
+};
+
+router.get(
+  "/transaction/groupBy/location",
+  authorize,
+  wrapFunction(getLocationTotalAmount)
 );
 
 export default router;

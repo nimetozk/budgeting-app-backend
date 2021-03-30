@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import TaskModel from "../schemas/task-schema";
 import TransactionModel from "../schemas/transaction-schema";
 import PlaceLabelModel from "../schemas/place-label-schema";
+import { query } from "express";
 
 export const saveAllTransactions = async (transactions) => {
   const arrayPromises = [];
@@ -288,4 +289,85 @@ export const deleteLocationForTransaction = async (transactionId) => {
   }).exec();
   transactionModel.refPlaceLabel = null;
   transactionModel.save();
+};
+
+export const locationTotalAmount = (userId) => {
+  const query = [];
+
+  query.push(
+    {
+      $match: { transactionType: "debit" },
+    },
+    {
+      $match: { refPlaceLabel: { $exists: true } },
+    },
+
+    {
+      $match: { $expr: { $ne: ["$refPlaceLabel", null] } },
+    },
+    {
+      $lookup: {
+        from: "task",
+        localField: "refTask",
+        foreignField: "_id",
+        as: "task",
+      },
+    },
+    { $unwind: { path: "$task", preserveNullAndEmptyArrays: false } },
+
+    {
+      $lookup: {
+        from: "bankAccount",
+        localField: "task.refBankAccount",
+        foreignField: "_id",
+        as: "bankAccount",
+      },
+    },
+
+    { $unwind: { path: "$bankAccount", preserveNullAndEmptyArrays: false } },
+
+    {
+      $match: { "bankAccount.refUser": Types.ObjectId(userId) },
+    },
+
+    {
+      $group: {
+        _id: {
+          label: "$refPlaceLabel.name",
+          location: "$refPlaceLabel.location",
+          currency: "$bankAccount.currency",
+        },
+        totalAmount: { $sum: "$transactionAmount" },
+      },
+    },
+    {
+      $project: {
+        label: "$_id.label",
+        location: "$_id.location",
+        totalAmount: 1,
+        currency: {
+          $switch: {
+            branches: [
+              {
+                case: { $eq: ["$_id.currency", "GBP"] },
+                then: "£",
+              },
+              {
+                case: { $eq: ["$_id.currency", "USD"] },
+                then: " $",
+              },
+              {
+                case: { $eq: ["$_id.currency", "EUR"] },
+                then: " €",
+              },
+            ],
+            default: "NC",
+          },
+        },
+        _id: 0,
+      },
+    }
+  );
+
+  return TransactionModel.aggregate(query).exec();
 };
