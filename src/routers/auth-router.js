@@ -57,19 +57,23 @@ const signin = async (req, res) => {
   }
 
   if (!validator.isEmail(email)) {
-    res.status(StatusCodes.BAD_REQUEST).send("Email is invalid format !");
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send("The format of the email is invalid !");
     return;
   }
 
   const user = await userRepository.getUserByCredential(email);
   if (!user) {
-    res.status(StatusCodes.NOT_FOUND).send("invalid !");
+    res
+      .status(StatusCodes.NOT_FOUND)
+      .send("The format of the email is invalid !");
     return;
   }
 
   const ok = await checkPassword(user.password, password);
   if (!ok) {
-    res.status(StatusCodes.NOT_FOUND).send("password invalid !");
+    res.status(StatusCodes.NOT_FOUND).send("The password is invalid !");
     return;
   }
 

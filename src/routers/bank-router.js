@@ -29,7 +29,7 @@ const bankById = async (req, res, next) => {
   const bank = await bankRepository.getBankById(req.params.id);
 
   if (!bank) {
-    res.status(StatusCodes.NOT_FOUND).json("bank is not found !");
+    res.status(StatusCodes.NOT_FOUND).json("Bank couldn't found !");
     return;
   }
   res.status(StatusCodes.OK).json(bank);

@@ -36,8 +36,6 @@ const updatedUser = async (req, res) => {
 
   const userInDB = await UserModel.findById(user._id).exec();
 
-  console.log("frontend", user);
-  console.log("backEnd", userInDB);
   if (userInDB.password !== user.password) {
     user.password = await hashPassword(user.password);
   }
@@ -59,7 +57,7 @@ const userById = async (req, res, next) => {
   const user = await userRepository.getUserById(req.params.id);
 
   if (!user) {
-    res.status(StatusCodes.NOT_FOUND).json("user is not found !");
+    res.status(StatusCodes.NOT_FOUND).json("The user couldn't found !");
     return;
   }
   res.status(StatusCodes.OK).json(user);
@@ -75,7 +73,7 @@ const deletedUserById = async (req, res) => {
     res
       .status(StatusCodes.METHOD_NOT_ALLOWED)
       .send(
-        "This user cannot be deleted, user has relationship with user bank account"
+        "This user cannot be deleted since it has a relationship with a bank account"
       );
     return;
   }

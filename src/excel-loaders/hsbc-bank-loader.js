@@ -13,15 +13,13 @@ export const validateDate = (date) => {
 };
 
 const loader = async (buffer, taskId) => {
-  const allLines = buffer.toString().split(/(?:\r\n|\r|\n)/g); // we are taking row by row
+  const allLines = buffer.toString().split(/(?:\r\n|\r|\n)/g);
   if (!allLines || !allLines.length || allLines.length <= 1) {
     let res = new Result();
     res.isError = true;
-    res.message = "problem var";
+    res.message = "A problem occurred !";
     return res;
   }
-
-  console.log("alllines", allLines);
 
   const trans = [];
   for (let i = 1; i < allLines.length; i += 1) {
@@ -48,7 +46,6 @@ const loader = async (buffer, taskId) => {
     trans.push(transaction);
   }
 
-  //console.log("trans ", trans);
   return new Result(false, trans);
 };
 

@@ -13,11 +13,11 @@ const validateDate = (date) => {
 };
 
 const loader = async (buffer, taskId) => {
-  const allLines = buffer.toString().split(/(?:\r\n|\r|\n)/g); // we are taking row by row
+  const allLines = buffer.toString().split(/(?:\r\n|\r|\n)/g);
   if (!allLines || !allLines.length || allLines.length <= 1) {
     let res = new Result();
     res.isError = true;
-    res.message = "problem var";
+    res.message = "A problem occurred !";
     return res;
   }
 

@@ -8,9 +8,7 @@ import * as transactionsRepository from "../repositories/transaction-repository"
 import authorize from "../middleware/authorize";
 import TaskModel from "../schemas/task-schema";
 import { wrapFunction } from "../util";
-import { placeLabelSchema } from "../schemas/place-label-schema";
 import { StatusCodes } from "http-status-codes";
-import { async } from "regenerator-runtime";
 
 const router = Router();
 
@@ -41,7 +39,6 @@ const saveTransactions = async (req, res, next) => {
     res.status(404).json(result.message);
     return;
   }
-  console.log(result.value);
   const transactions = result.value;
 
   await transactionsRepository.saveAllTransactions(transactions);

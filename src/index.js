@@ -29,7 +29,6 @@ const startServer = async () => {
   app.use("/api", authRouter);
   app.use("/api", bankRouter);
   app.use((err, req, res, next) => {
-    console.log(err);
     res.status(500).send("error :" + errorToString(err));
   });
 

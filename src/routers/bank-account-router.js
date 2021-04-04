@@ -44,7 +44,7 @@ const deleteBankAccount = async (req, res) => {
     res
       .status(500)
       .send(
-        "This cannot be deleted because there an record relationship with task !"
+        "This action cannot be performed since the record has a relationship with a task !"
       );
     return;
   }

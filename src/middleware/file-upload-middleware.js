@@ -5,7 +5,7 @@ import multer from "multer";
 const storage = multer.memoryStorage();
 
 const tabFileFilter = (req, file, cb) => {
-  console.log(file.mimetype);
+  // console.log(file.mimetype);
   if (file.mimetype === "text/plain") {
     cb(null, true);
   } else {
