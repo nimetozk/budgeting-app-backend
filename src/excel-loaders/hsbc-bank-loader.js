@@ -11,7 +11,7 @@ export const validateDate = (date) => {
   const formatDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
   return new Date(formatDate);
 };
-
+/* istanbul ignore next */
 const loader = async (buffer, taskId) => {
   const allLines = buffer.toString().split(/(?:\r\n|\r|\n)/g);
   if (!allLines || !allLines.length || allLines.length <= 1) {
@@ -35,10 +35,14 @@ const loader = async (buffer, taskId) => {
     let cellAmount = lineCells[3];
 
     if (cellAmount.includes("-")) {
-      transaction.transactionAmount = parseFloat(cellAmount.substring(2));
+      transaction.transactionAmount = parseFloat(
+        cellAmount.substring(2)
+      ).toFixed(2);
       transaction.transactionType = "debit";
     } else {
-      transaction.transactionAmount = parseFloat(cellAmount.substring(1));
+      transaction.transactionAmount = parseFloat(
+        cellAmount.substring(1)
+      ).toFixed(2);
       transaction.transactionType = "credit";
     }
     transaction.refCategory = await assignCategories(transaction.description);

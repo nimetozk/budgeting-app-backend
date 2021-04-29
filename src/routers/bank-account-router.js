@@ -44,7 +44,7 @@ const deleteBankAccount = async (req, res) => {
     res
       .status(500)
       .send(
-        "This action cannot be performed since the record has a relationship with a task !"
+        "This bank account has a relationship with a task. To delete the account, please contact with the QuickLook Team !"
       );
     return;
   }

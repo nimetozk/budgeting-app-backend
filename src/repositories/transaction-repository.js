@@ -3,6 +3,7 @@ import TaskModel from "../schemas/task-schema";
 import TransactionModel from "../schemas/transaction-schema";
 import PlaceLabelModel from "../schemas/place-label-schema";
 
+/* istanbul ignore next */
 export const saveAllTransactions = async (transactions) => {
   const arrayPromises = [];
 

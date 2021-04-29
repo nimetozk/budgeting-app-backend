@@ -2,6 +2,7 @@ import { assignCategories, Result, IsnullOrEmpty } from "../util";
 import TransactionModel from "../schemas/transaction-schema";
 import { Types } from "mongoose";
 
+/* istanbul ignore next */
 const validateDate = (date) => {
   if (IsnullOrEmpty(date)) {
     return null;
@@ -12,6 +13,7 @@ const validateDate = (date) => {
   return new Date(formatDate);
 };
 
+/* istanbul ignore next */
 const loader = async (buffer, taskId) => {
   const allLines = buffer.toString().split(/(?:\r\n|\r|\n)/g);
   if (!allLines || !allLines.length || allLines.length <= 1) {
