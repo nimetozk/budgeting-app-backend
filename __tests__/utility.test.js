@@ -1,20 +1,20 @@
-import { errorToString, IsnullOrEmpty } from "../src/util";
+import { errorToString, IsnullOrEmpty, hashPassword } from "../src/util";
 import { describe, expect, test, jest } from "@jest/globals";
 import { validateDate } from "../src/excel-loaders/hsbc-bank-loader";
 
-describe("util.js test edilirken", () => {
+describe("util.js tests", () => {
   describe("IsnullOrEmpty ", () => {
-    test("When string is empty ", () => {
+    test("When the string is empty ", () => {
       const obje = "";
       expect(IsnullOrEmpty(obje)).toBe(true);
     });
 
-    test("When string is null ", () => {
+    test("When the string is null ", () => {
       const obje = null;
       expect(IsnullOrEmpty(obje)).toBe(true);
     });
 
-    test("When string is not empty", () => {
+    test("When the string is not empty", () => {
       const obje = "test";
       expect(IsnullOrEmpty(obje)).toBe(false);
     });
