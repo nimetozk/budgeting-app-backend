@@ -35,7 +35,7 @@ const signup = async (req, res) => {
   if (userInDB) {
     res
       .status(StatusCodes.NOT_ACCEPTABLE)
-      .json("This email was defined before for another user !");
+      .json("This email was defined before by another user !");
     return;
   }
 
@@ -59,7 +59,7 @@ const signin = async (req, res) => {
   if (!validator.isEmail(email)) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .send("The format of the email is invalid !");
+      .send("The format of the email is not acceptable !");
     return;
   }
 
@@ -67,7 +67,7 @@ const signin = async (req, res) => {
   if (!user) {
     res
       .status(StatusCodes.NOT_FOUND)
-      .send("The format of the email is invalid !");
+      .send("The format of the email is not acceptable !");
     return;
   }
 

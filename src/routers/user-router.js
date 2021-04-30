@@ -57,7 +57,7 @@ const userById = async (req, res, next) => {
   const user = await userRepository.getUserById(req.params.id);
 
   if (!user) {
-    res.status(StatusCodes.NOT_FOUND).json("The user couldn't found !");
+    res.status(StatusCodes.NOT_FOUND).json("User not found !");
     return;
   }
   res.status(StatusCodes.OK).json(user);
