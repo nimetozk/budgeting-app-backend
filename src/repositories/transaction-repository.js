@@ -1,3 +1,7 @@
+/**
+ * Transaction repository encapslates the logic required to access the 'Transaction' collection in the database.
+ */
+
 import { Types } from "mongoose";
 import TaskModel from "../schemas/task-schema";
 import TransactionModel from "../schemas/transaction-schema";

@@ -1,3 +1,10 @@
+/**
+ * This is where the server starts listening the client requests.
+ * Application uses the router middlewares to responds to the client requests.
+ *
+ * https://expressjs.com/en/guide/using-middleware.html
+ */
+
 import bodyParser from "body-parser";
 import express from "express";
 import config from "./config";

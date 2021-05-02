@@ -1,3 +1,7 @@
+/**
+ * Task repository encapslates the logic required to access the 'Task' collection in the database.
+ */
+
 import BankAccountModel from "../schemas/bank-account-schema";
 import TaskModel from "../schemas/task-schema";
 import mongoose from "mongoose";

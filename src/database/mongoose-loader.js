@@ -1,6 +1,8 @@
 import config from "../config";
 import mongoose, { mongo } from "mongoose";
 
+//Establishes the database connection
+
 const DbLoader = async () => {
   await mongoose.connect(config.databaseURL, {
     useNewUrlParser: true,

@@ -1,3 +1,6 @@
+/**
+ * The code in this file provide functions that are used in different files to set business rules
+ */
 import * as categoryRepository from "../repositories/category-repository";
 import argon2 from "argon2";
 import bcrypt from "bcrypt";

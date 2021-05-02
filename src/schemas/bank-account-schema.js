@@ -1,3 +1,9 @@
+/**
+ * Defines the dynamic schema for 'bank account' documents stored in the database.
+ *
+ * This is the guide I followed: https://mongoosejs.com/docs/guide.html
+ */
+
 import mongoose, { Schema, Types } from "mongoose";
 
 export const bankAccountSchema = new Schema({

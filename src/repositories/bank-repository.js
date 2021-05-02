@@ -1,3 +1,7 @@
+/**
+ * Bank repository encapslates the logic required to access the 'Bank' collection in the database.
+ */
+
 import BankModel from "../schemas/bank-schema";
 import mongoose from "mongoose";
 

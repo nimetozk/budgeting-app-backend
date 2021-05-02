@@ -1,3 +1,5 @@
+//Mitigrates admin account
+
 import mongoose from "mongoose";
 import MigrationHistoryModel from "../schemas/migration-history-schema";
 import UserModel, { Roles } from "../schemas/user-schema";
@@ -12,7 +14,7 @@ const migrate1 = (handleNext) => {
       userModel.firstname = "admin";
       userModel.lastname = "admin";
       userModel.email = "admin@money.com";
-      userModel.password = await hashPassword("12345");
+      userModel.password = await hashPassword("12345678");
       userModel.phoneNumber = "";
       userModel.userRoles = [Roles.ADMIN];
 

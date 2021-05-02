@@ -1,3 +1,9 @@
+/**
+ * Defines the dynamic schema for 'place label' documents stored in the database.
+ *
+ * This is the guide I followed: https://mongoosejs.com/docs/guide.html
+ */
+
 import mongoose, { Schema } from "mongoose";
 import { PointSchema } from "./point-schema";
 

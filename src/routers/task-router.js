@@ -1,3 +1,14 @@
+/**
+ * Task router responds to the client requests which are related to the user tasks
+ *
+ * To understand the Express.js library, I have used the following website and books:
+ * https://expressjs.com/en/guide/routing.html
+ *
+ * Wilson, E. (2018). MERN Quick Start Guide, Building Web applications with MongoDB, Express.js, React, and Node. Birmingham: Packt Publishing.
+ * Subramanian, V.(2019). Pro MERN Stack. Bangalore: Apress.
+ *
+ */
+
 import express, { Router } from "express";
 import { Types } from "mongoose";
 import TaskModel from "../schemas/task-schema";

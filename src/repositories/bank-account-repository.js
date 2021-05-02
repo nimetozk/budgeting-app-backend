@@ -1,4 +1,7 @@
-import { async } from "regenerator-runtime";
+/**
+ * Bank account repository encapslates the logic required to access the 'Bank Account' collection in the database.
+ */
+
 import BankAccountModel from "../schemas/bank-account-schema";
 import TaskModel from "../schemas/task-schema";
 

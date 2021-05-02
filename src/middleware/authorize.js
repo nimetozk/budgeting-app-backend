@@ -1,3 +1,7 @@
+/**
+ * The user is authorised for securely transmitting information between back-end end front-end.
+ */
+
 import jwt from "jsonwebtoken";
 import config from "../config";
 

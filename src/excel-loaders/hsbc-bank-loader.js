@@ -1,3 +1,10 @@
+/**
+ * Analyses the bank statement of the 'HSBC' bank
+ * Identifies each transaction by splitting the file into lines and cells.
+ * Then assigns a category to the transaction.
+ *
+ */
+
 import { assignCategories, Result, IsnullOrEmpty } from "../util";
 import TransactionModel from "../schemas/transaction-schema";
 import { Types } from "mongoose";

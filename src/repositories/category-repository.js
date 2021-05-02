@@ -1,3 +1,7 @@
+/**
+ * Category repository encapslates the logic required to access the 'Category' collection in the database.
+ */
+
 import CategoryModel from "../schemas/category-schema";
 
 /* istanbul ignore next */

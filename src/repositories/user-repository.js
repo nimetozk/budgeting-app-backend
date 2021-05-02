@@ -1,3 +1,7 @@
+/**
+ * User repository encapslates the logic required to access the 'User'' collection in the database.
+ */
+
 import UserModel from "../schemas/user-schema";
 import mongoose from "mongoose";
 
